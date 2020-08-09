@@ -18,18 +18,14 @@ tf.keras.backend.clear_session()
 tf.random.set_seed(739)
 np.random.seed(739)
 
-from vae-st import *
+from vae_st import *
 
 
 
 #os.system('rm -rf logs/*')
 
-st = True
 k = 7
 
-model = 'st' if st else 'MIWAE'
-print('model',model)
-print('K', k)
 
 (x_train, _), (x_test, _) = tf.keras.datasets.fashion_mnist.load_data()
 
@@ -123,11 +119,10 @@ verb = 0
 hyp_param ={ 'inp_shape': xm_train.shape[1],
              'encod_size' : [50, 20],
              'decod_size':  [50],
-             'st' : st,
              'l2':1e-4,
              'act_fun': tf.nn.relu,
              'batch_size' : 500,
-             'epochs' : 10,
+             'epochs' : 2,
              'gaus_out': False,
              'learning_rate' : 1e-3,
              'K':k
@@ -183,7 +178,7 @@ index = np.random.choice(range(x_test_org.shape[0]) ,  5)
 
 
 
-## x^ is the rcustructed test set
+## x^ is the reconstructed test set
 ## x~ is generated samples from decoder
 
 x_hat = vae([xm_test, test_mask])
