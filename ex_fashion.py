@@ -2,16 +2,12 @@ import itertools
 import matplotlib.pyplot as plt
 import numpy as np
 import os 
-import pandas as pd
 import pickle
-import seaborn as sns
 import sys
 import tensorflow as tf
 import tensorflow_probability as tfp
 import time
-from scipy.stats import norm
 from skimage.metrics import structural_similarity as ssim
-from sklearn.metrics import mutual_info_score
 
 
 tf.keras.backend.clear_session() 
@@ -123,7 +119,6 @@ hyp_param ={ 'inp_shape': xm_train.shape[1],
              'act_fun': tf.nn.relu,
              'batch_size' : 500,
              'epochs' : 2,
-             'gaus_out': False,
              'learning_rate' : 1e-3,
              'K':k
 }
@@ -132,8 +127,6 @@ hyp_param ={ 'inp_shape': xm_train.shape[1],
 
 
 vae = VAE(hyp_param)
-
-
 
 vae.compile(optimizer=tf.keras.optimizers.Adam(lr=hyp_param['learning_rate']),              
             loss = vae.total_loss,
@@ -160,8 +153,6 @@ history = vae.fit([xm_train,train_mask],
                   verbose=verb)
 end = time.time()
 print('TIME:  ', end-start)
-
-
 
 
 
@@ -271,9 +262,7 @@ with open('results/hist_{}_{}'.format(name,tim),'wb') as f:
 np.savez('results/jf_{}_{}_miss.npz'.format(name,tim),
          hist = eval_test,
          ss = sm_avg)
-
 #"""
-
 
 plt.show()
 
