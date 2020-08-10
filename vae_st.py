@@ -61,19 +61,20 @@ class VAE(tf.keras.Model):
         
         
     def make_decoder(self):
-        inp = tf.keras.Input(self.encod_size[-1])
-        x = inp
+        decoder = tf.keras.Sequential(name= 'Decoder')
+
         for lay in self.decod_size:
             
-            x = tf.keras.layers.Dense(lay,
+            decoder.add(tf.keras.layers.Dense(lay,
                                       kernel_regularizer =tf.keras.regularizers.l2(self.l2),
-                                      activation = self.act_fun)(x)
+                                      activation = self.act_fun))
             
-        logits = tf.keras.layers.Dense(self.inp_shape, name='output')(x)
-        output = tfp.layers.IndependentBernoulli(self.inp_shape, tfp.distributions.Bernoulli.logits)(logits)
-        return tf.keras.models.Model(inp, output, name= 'Decoder')
+        decoder.add(tf.keras.layers.Dense(self.inp_shape, name='output'))
+        decoder.add(tfp.layers.IndependentBernoulli(self.inp_shape, tfp.distributions.Bernoulli.logits))
+ 
+        return decoder
 
-        
+
     def call(self, inputs): 
         inp , self.mask = inputs 
         z_mu, z_var, z_nu = self.encoder(inp)
@@ -81,7 +82,7 @@ class VAE(tf.keras.Model):
         p_z = self.prior(z_nu)
 
         z = q_z.sample(self.K)
-        
+        #z =  tf.reshape(z, [self.K*self.batch_size, self.encod_size[-1]])
         self.kl =  q_z.log_prob(z) - p_z.log_prob(z)
         reconstructed = self.decoder(z)
 

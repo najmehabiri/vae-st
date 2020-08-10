@@ -234,7 +234,7 @@ imags = list(itertools.chain(*[[x_test_org[inx],
 #####################
 
 
-plt.figure('history model_{}'.format(model))
+plt.figure('history_model')
 keys = history.history.keys()
 for i,k in enumerate(keys):
    plt.plot(history.history[k], label=k)
@@ -247,7 +247,7 @@ for i,k in enumerate(keys):
 fig, ax = plt.subplots(5,5, 
                        figsize=(10, 15),
                        subplot_kw={'xticks': [], 'yticks': []},
-                       num= 'model_{}'.format(model))
+                       num= 'model_results')
 for i, axi in enumerate(ax.flat):
      if imags[i].shape[-1]==3:
          axi.imshow(imags[i].reshape(28,28,3),interpolation='nearest')
@@ -261,7 +261,7 @@ for a, col in zip(ax[0], col_name):
 plt.xlabel( (str(hyp_param),'ssim',str(sm_avg)),
             wrap=True, position = (-2,0))# ha = 'center', va ='center' )
 
-name = '{}_K{}'.format(model,hyp_param['K'])
+name = 'K{}'.format(hyp_param['K'])
 
 """ Saving the results
 plt.savefig('results/fashion_{}_{}_miss_jf.eps'.format(name,tim),
@@ -277,7 +277,6 @@ np.savez('results/jf_{}_{}_miss.npz'.format(name,tim),
 
 plt.show()
 
-msg = "curl 'https://api.simplepush.io/send/3t74h9/{}/{} SSIM {}'".format(model,
-                                                                          hyp_param['K'],
+msg = "curl 'https://api.simplepush.io/send/4ruCJe/{} SSIM {}'".format(hyp_param['K'],
                                                                           sm_avg)
 os.system(msg)
